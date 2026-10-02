@@ -1219,6 +1219,7 @@ const C=[
 ,
   {name:"셀파바이청담",url:"https://cellpa.co.kr/",cat:"피부관리·스파",
    cats:{
+     "헤드스파":["헤드스파","두피케어","두피마사지","스캘프트리트먼트"],
      "바디테라피":["림프순환관리","바디테라피","면역회복테라피","아로마테라피"],
      "스킨케어":["스위스퍼펙션관리","페이셜케어","피부재생관리"],
      "프리미엄케어":["하이엔드스파","프라이빗케어","전담테라피스트"]
@@ -1311,7 +1312,17 @@ function rv(q){
   return q;
 }
 function mt(s,q,r){const sl=s.toLowerCase(),ql=q.toLowerCase(),rl=r.toLowerCase();return sl.includes(ql)||ql.includes(sl)||sl.includes(rl)||rl.includes(sl);}
-function cm(c,q){if(!q)return true;const r=rv(q);return c.all.some(t=>mt(t,q,r));}
+function cm(c,q){
+  if(!q) return true;
+  const r=rv(q);
+  var ql=q.toLowerCase();
+  // 병원명 검색
+  if(c.name.toLowerCase().includes(ql)) return true;
+  // URL 검색
+  if(c.url && c.url.toLowerCase().includes(ql)) return true;
+  // 시술명 검색
+  return c.all.some(t=>mt(t,q,r));
+}
 function gm(c,q){if(!q)return new Set();const r=rv(q);return new Set(c.all.filter(t=>mt(t,q,r)));}
 const TAG_GROUPS=[
   {
@@ -1430,6 +1441,10 @@ const TAG_GROUPS=[
 ];
 const TAGS_ALL=TAG_GROUPS.flatMap(function(g){return g.tags.map(function(t){return t.ko;});});
 const TERM_I18N={
+  "헤드스파":{"en":"Head Spa","cn":"头部水疗","jp":"ヘッドスパ"},
+  "두피케어":{"en":"Scalp Care","cn":"头皮护理","jp":"頭皮ケア"},
+  "두피마사지":{"en":"Scalp Massage","cn":"头皮按摩","jp":"頭皮マッサージ"},
+  "스캘프트리트먼트":{"en":"Scalp Treatment","cn":"头皮护理疗程","jp":"スカルプトリートメント"},
   "림프순환관리":{"en":"Lymphatic Drainage","cn":"淋巴循环管理","jp":"リンパドレナージュ"},
   "바디테라피":{"en":"Body Therapy","cn":"身体疗法","jp":"ボディセラピー"},
   "면역회복테라피":{"en":"Immune Recovery Therapy","cn":"免疫恢复疗法","jp":"免疫回復セラピー"},
