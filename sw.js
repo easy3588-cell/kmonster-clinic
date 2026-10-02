@@ -1,5 +1,6 @@
-const CACHE = 'kmonster-v7';
+const CACHE = 'kmonster-v' + Date.now();
 const FILES = ['/', '/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
+
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
   self.skipWaiting();
@@ -12,8 +13,12 @@ self.addEventListener('activate', e => {
 });
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request)
-      .then(c => c || fetch(e.request))
-      .catch(() => caches.match('/index.html'))
+    fetch(e.request)
+      .then(res => {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+        return res;
+      })
+      .catch(() => caches.match(e.request))
   );
 });
